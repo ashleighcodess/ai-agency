@@ -876,15 +876,75 @@
             background: linear-gradient(135deg, rgba(45, 90, 61, 0.03) 0%, transparent 50%);
         }
 
-        /* Contact Form - Dark Section */
-        .contact {
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 580px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -48px;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* CTA Section (replaces Contact section) */
+        .cta {
             padding: 140px 0;
             background: var(--dark);
             position: relative;
             overflow: hidden;
         }
 
-        .contact::after {
+        .cta::after {
             content: '';
             position: absolute;
             bottom: -200px;
@@ -897,20 +957,63 @@
             pointer-events: none;
         }
 
-        .contact .section-label {
+        .cta .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .cta .section-label {
             background: rgba(52, 211, 153, 0.1);
             border-color: rgba(52, 211, 153, 0.2);
             color: #34d399;
         }
 
-        .contact .section-header h2 {
+        .cta .section-header {
+            margin-bottom: 48px;
+        }
+
+        .cta .section-header h2 {
             color: var(--white);
         }
 
-        .contact .section-header p {
+        .cta .section-header p {
             color: rgba(255, 255, 255, 0.6);
         }
 
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-buttons .btn-primary {
+            background: linear-gradient(135deg, #34d399 0%, var(--primary) 100%);
+            padding: 18px 40px;
+            font-size: 17px;
+            box-shadow: 0 20px 40px rgba(52, 211, 153, 0.3);
+        }
+
+        .cta-buttons .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(52, 211, 153, 0.4);
+        }
+
+        .cta-buttons .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding: 18px 40px;
+            font-size: 17px;
+        }
+
+        .cta-buttons .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Form Container (used in modal) */
         .form-container {
             max-width: 600px;
             margin: 0 auto;
@@ -1651,7 +1754,7 @@
                 <a href="#work">Work</a>
                 <a href="#process">Process</a>
                 <a href="#contact">Contact</a>
-                <a href="#contact" class="btn btn-primary">Get a Quote</a>
+                <a href="#" class="btn btn-primary open-modal">Get a Quote</a>
             </nav>
         </div>
     </header>
@@ -1666,7 +1769,7 @@
             <h1>Custom Software <span>Built for Your Business</span></h1>
             <p>We design and develop custom portals, dashboards, and business tools that streamline your operations. No templates. No bloat. Just software that works.</p>
             <div class="hero-buttons">
-                <a href="#contact" class="btn btn-primary btn-large">Start Your Project</a>
+                <a href="#" class="btn btn-primary btn-large open-modal">Start Your Project</a>
                 <a href="#work" class="btn btn-outline btn-large">View Our Work</a>
             </div>
             <div class="hero-clients">
@@ -1973,16 +2076,26 @@
         </div>
     </section>
 
-    <!-- Contact Form -->
-    <section class="contact" id="contact">
+    <!-- CTA Section -->
+    <section class="cta" id="contact">
         <div class="container">
             <div class="section-header fade-in">
                 <span class="section-label">Get Started</span>
                 <h2>Let's Build Something That Lasts</h2>
                 <p>Tell us about your project. It only takes a minute.</p>
             </div>
+            <div class="cta-buttons fade-in">
+                <a href="#" class="btn btn-primary btn-large open-modal">Start Your Project</a>
+                <a href="mailto:hello@evergreentech.studio" class="btn btn-outline btn-large">Email Us Directly</a>
+            </div>
+        </div>
+    </section>
 
-            <div class="form-container fade-in">
+    <!-- Quote Modal -->
+    <div class="modal-overlay" id="quoteModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="form-container">
                 <!-- Progress Bar -->
                 <div class="form-progress">
                     <div class="progress-bar">
@@ -2120,13 +2233,9 @@
                     </div>
                 </form>
 
-                <!-- Simple Form Toggle -->
-                <div class="form-toggle">
-                    <p>Prefer a simple form? <a href="mailto:hello@evergreentech.studio">Email us directly</a></p>
-                </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -2358,6 +2467,42 @@
             document.querySelector('.form-progress').style.display = 'block';
             showStep(1);
         }
+
+        // Modal functionality
+        const modal = document.getElementById('quoteModal');
+        const openModalBtns = document.querySelectorAll('.open-modal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        function openModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        openModalBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
